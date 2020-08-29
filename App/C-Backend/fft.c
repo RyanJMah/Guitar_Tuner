@@ -32,6 +32,7 @@ float* take_magnitude(float complex* Af, unsigned int size) {
 float magnitude(float complex z) { return sqrt(crealf(z)*crealf(z) + cimagf(z)*cimagf(z)); }
 
 float complex* Hann(float complex* x, size_t size) {
+	// Applies a Hanning window function to the samples
 	float complex* Hann_x = malloc(size*sizeof(float complex));
 	for (int i = 0; i < size; i++) {
 	    float complex multiplier = (0.5*(1 - cos(2*pi*i/(size - 1)))) + 0.0*I;
