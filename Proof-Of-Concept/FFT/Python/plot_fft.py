@@ -21,7 +21,7 @@ def plot_FT(Af, sample_rate):
 
     plt.grid()
     plt.plot(f, Af)
-    # plt.scatter(f, Af)
+    plt.scatter(f, Af)
     plt.show()
     plt.close()
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
         data = list(reader)
         data = [float(i[0]) for i in data]
 
-    plot_FT(data, 1024*10)
+    plot_FT(data, 44.1E3)
 
 
 

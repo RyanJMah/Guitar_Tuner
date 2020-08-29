@@ -16,7 +16,9 @@ float complex* Hann(float complex* x, size_t size);
 
 float complex* dft(float complex* At, unsigned int size);
 float complex* fft_complex(float complex* At, unsigned int size);
-float* fft(float complex* At, unsigned int size);
+float* fft(float complex* At, unsigned int size, float threshold);
+
+float* bins_to_freq(float sample_rate, unsigned int N);
 ////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -100,19 +102,34 @@ float complex* fft_complex(float complex* At, unsigned int N) {
 		free(At_even);
 		free(At_odd);
 
+		At_even = NULL;
+		At_odd = NULL;
+
 		return Af_ret;
 	}
 }
 
-float* fft(float complex* At, unsigned int N) {
-	float complex* results = fft_complex(At, N);
+float* fft(float complex* At, unsigned int N, float threshold) {
+	float complex* Hann_At = Hann(At, N);
+	float complex* results = fft_complex(Hann_At, N);
 	
+	free(Hann_At);
+	Hann_At = NULL;
+
 	float* real_results = take_magnitude(results, N);
 	free(results);
+	results = NULL;
 
 	return real_results;
 }
 
+float* bins_to_freq(float sample_rate, unsigned int N) {
+	float* freqs = malloc(N*sizeof(float));
+	for (unsigned int i = 0; i < N; i++) {
+		freqs[i] = i*(sample_rate/N);
+	}
+	return freqs;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////
 
