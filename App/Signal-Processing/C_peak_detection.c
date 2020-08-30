@@ -1,20 +1,22 @@
-#ifndef PEAK_DETECTION
-#define PEAK_DETECTION
-
-#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <stdbool.h>
 #include <math.h>
 #include <complex.h>
-#include <stdbool.h>
 
 
 /////////////////////////////////////////////////////////////////////////////
 // FUNCTION DECLARATIONS
 double quadratic_interpolation(float alpha, float beta, float gamma);
 double get_fundamental_freq(float* x, float* freqs, size_t N, float threshold);
+
+void free_wrapper(float* x);
 /////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
+void free_wrapper(float* x) { free(x); }
+
 double quadratic_interpolation(float alpha, float beta, float gamma) {
 	double p = 0.5*( (alpha - gamma)/(alpha - 2.0*beta + gamma) );
 	return p;
@@ -32,7 +34,6 @@ double get_fundamental_freq(float* x, float* freqs, size_t N, float threshold) {
 					 (beta > gamma);
 
 		if (found) {
-			// printf("i = %d\n", i);
 			return freqs[i] + quadratic_interpolation(alpha, beta, gamma);
 		}
 	}
@@ -40,4 +41,3 @@ double get_fundamental_freq(float* x, float* freqs, size_t N, float threshold) {
 /////////////////////////////////////////////////////////////////////////////
 
 
-#endif

@@ -53,12 +53,12 @@ int main() {
 
 
 	float freq = 440;
-	float complex x[bins];
+	float x[bins];
 	for (int t = 0; t < len(t_arr); t++) {
-		x[t] = (sin(2*pi*freq*t_arr[t]) + sin(2*pi*freq*3*t_arr[t]) + sin(pi*freq*t_arr[t]));
+		x[t] = (sin(2*pi*freq*t_arr[t]) + sin(2*pi*freq*3*t_arr[t]) + sin(pi*freq*t_arr[t]) + 1);
 	}
 
-	float* freq_bins = bins_to_freq(sample_rate, bins);
+	// float* freq_bins = bins_to_freq(sample_rate, bins);
 	// clock_t time = clock();
 
 	// float* thing;
@@ -73,10 +73,10 @@ int main() {
 	// printf("time = %.15fms\n", time_taken*1E3);
 		
 
-	float* results = fft(x, bins, 100);
-	double fundamental = get_fundamental_freq(results, freq_bins, bins, 3.0);
+	float* results = fft(x, bins);
+	// double fundamental = get_fundamental_freq(results, freq_bins, bins, 3.0);
 
-	printf("fundamental freq = %f Hz\n", fundamental);
+	// printf("fundamental freq = %f Hz\n", fundamental);
 
 
 	// write_to_csv("/home/ryan/Desktop/shared/Personal/Guitar-Tuner-Project/src/FFT/Python/dft_data.csv", results, bins);	// ubuntu
@@ -84,6 +84,6 @@ int main() {
 
 
 
-	free(results);
+	free_wrapper(results);
     return 0;
 }

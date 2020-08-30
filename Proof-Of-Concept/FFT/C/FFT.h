@@ -9,20 +9,24 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DECLARATIONS
+void free_wrapper(float* x);
+
 float magnitude(float complex z);
 float* take_magnitude(float complex* Af, unsigned int size);
 
-float complex* Hann(float complex* x, size_t size);
+float complex* Hann(float* x, size_t size);
 
 float complex* dft(float complex* At, unsigned int size);
 float complex* fft_complex(float complex* At, unsigned int size);
-float* fft(float complex* At, unsigned int size, float threshold);
+float* fft(float* At, unsigned int size);
 
 float* bins_to_freq(float sample_rate, unsigned int N);
 ////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
+void free_wrapper(float* x) { free(x); }
+
 float* take_magnitude(float complex* Af, unsigned int size) {
 	float* results = malloc(size*sizeof(float));
 	for (unsigned int i = 0; i < size; i++) {
@@ -33,7 +37,12 @@ float* take_magnitude(float complex* Af, unsigned int size) {
 
 float magnitude(float complex z) { return sqrt(crealf(z)*crealf(z) + cimagf(z)*cimagf(z)); }
 
-float complex* Hann(float complex* x, size_t size) {
+
+
+float complex* Hann(float* x, size_t size) {
+	// has two roles: applies a Hanning window to samples in time-domain to make fft more clean
+	// it also implicity casts samples "x" from floats to complex floats so it can be used in fft_complex
+
 	float complex* Hann_x = malloc(size*sizeof(float complex));
 	for (int i = 0; i < size; i++) {
 	    float complex multiplier = (0.5*(1 - cos(2*pi*i/(size - 1)))) + 0.0*I;
@@ -88,16 +97,8 @@ float complex* fft_complex(float complex* At, unsigned int N) {
 		for (unsigned int k = 0; k < N/2; k++) {
 			float complex W = cosf((-2*pi*k)/N) + sinf((-2*pi*k)/N)*I;
 
-			// printf("\n");
-			// printf("even = %f + %fj\n", creal(At_even[k]), cimag(At_even[k]));
-			// printf("odd = %f + %fj\n", creal(At_odd[k]), cimag(At_odd[k]));
-			// printf("W = %f + %fj\n", creal(W), cimag(W));
-
 			Af_ret[k] = (At_even[k] + At_odd[k]*W);
 			Af_ret[k+N/2] = (At_even[k] - At_odd[k]*W);
-
-
-
 		}
 		free(At_even);
 		free(At_odd);
@@ -109,7 +110,7 @@ float complex* fft_complex(float complex* At, unsigned int N) {
 	}
 }
 
-float* fft(float complex* At, unsigned int N, float threshold) {
+float* fft(float* At, unsigned int N) {
 	float complex* Hann_At = Hann(At, N);
 	float complex* results = fft_complex(Hann_At, N);
 	
@@ -122,6 +123,8 @@ float* fft(float complex* At, unsigned int N, float threshold) {
 
 	return real_results;
 }
+
+
 
 float* bins_to_freq(float sample_rate, unsigned int N) {
 	float* freqs = malloc(N*sizeof(float));

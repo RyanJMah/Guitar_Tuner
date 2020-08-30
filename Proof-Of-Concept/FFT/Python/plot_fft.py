@@ -17,11 +17,13 @@ def plot_FT(Af, sample_rate):
     # thing = [abs(i) for i in Af]
     f = [i*(sample_rate/N) for i in range(int(N/2))]
 
+    hann = [(0.5*(1 - np.cos(2*np.pi*i/(int(N/2) - 1)))) for i in range(int(N/2))]
+
     print(f[Af.index(max(Af))])
 
     plt.grid()
     plt.plot(f, Af)
-    plt.scatter(f, Af)
+    # plt.scatter(f, Af)
     plt.show()
     plt.close()
 
