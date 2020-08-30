@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -30,6 +31,7 @@ double get_fundamental_freq(float* x, float* freqs, size_t N, float threshold) {
 					 (beta > gamma);
 
 		if (found) {
+			// printf("%f\n", freqs[i] + quadratic_interpolation(alpha, beta, gamma));
 			return freqs[i] + quadratic_interpolation(alpha, beta, gamma);
 		}
 	}

@@ -2,11 +2,11 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from fft import fft, get_fundamental_freq
+from fft import fft, bins_to_freq, get_fundamental_freq
 
 def test():
-	def bins_to_freq(sample_rate, N):
-		return [i*(sample_rate/N) for i in range(N)]
+	# def bins_to_freq(sample_rate, N):
+	# 	return [i*(sample_rate/N) for i in range(N)]
 
 	def generate_time_arr(t_start, t_stop, sample_rate, maxsize):
 		t_step = 1/sample_rate
@@ -30,7 +30,7 @@ def test():
 
 	freq = 440
 	w = 2*np.pi*freq
-	x = [np.sin(w*t) + np.sin((w/2)*t) + np.sin(2*w*t) for t in t_arr]
+	x = [np.sin(w*t) + np.sin(0.5*w*t) + np.sin(2*w*t) for t in t_arr]
 	
 	freqs = bins_to_freq(sample_rate, bins)
 
@@ -39,7 +39,7 @@ def test():
 	X = fft(x)
 	print(f"Elapsed time = {time.time() -  start_time}")
 
-	f = get_fundamental_freq(X, freqs, 5)
+	f = get_fundamental_freq(X, freqs, 2)
 	print(f"Fundamental freq = {f}")
 
 
