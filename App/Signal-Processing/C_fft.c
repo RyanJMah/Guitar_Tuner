@@ -6,7 +6,7 @@
 #define pi 3.141592653589793
 
 
-// To compile for use in Python, use: "gcc -fPIC -shared -o C_fft.so C_fft.c"
+// To compile for use in Python, use: "gcc -fPIC -shared -o C_fft_<operating_system>.so C_fft.c"
 // The above command works for linux haven't tested it in Windows
 
 

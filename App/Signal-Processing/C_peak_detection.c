@@ -9,14 +9,10 @@
 // FUNCTION DECLARATIONS
 double quadratic_interpolation(float alpha, float beta, float gamma);
 double get_fundamental_freq(float* x, float* freqs, size_t N, float threshold);
-
-void free_wrapper(float* x);
 /////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
-void free_wrapper(float* x) { free(x); }
-
 double quadratic_interpolation(float alpha, float beta, float gamma) {
 	double p = 0.5*( (alpha - gamma)/(alpha - 2.0*beta + gamma) );
 	return p;
