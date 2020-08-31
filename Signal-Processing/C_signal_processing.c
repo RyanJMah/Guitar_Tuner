@@ -19,7 +19,7 @@ double quadratic_interpolation(float alpha, float beta, float gamma);
 float* harmonic_product_spectrum(float* x,float* freqs, size_t N) {
 	/*
 
-	The formula for the harmonic product specturm is the following:
+	The formula for the harmonic product spectrum is the following:
 
                          r=R
                        -------  /            \
