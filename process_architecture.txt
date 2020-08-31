@@ -1,0 +1,29 @@
+blocks := threads
+arrows := buffers
+
+       microphone
+           |
+           |
+           v
+    ----------------
+   |                |
+   | Audio_Streamer |
+   |                |
+    ----------------
+           |
+           |
+           v
+   ------------------
+  |                  |
+  | Signal_Processor |
+  |                  |
+   ------------------
+           |
+           |
+           v
+     -------------
+    |             |
+    | Display/GUI |
+    |             |
+     -------------
+

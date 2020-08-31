@@ -21,6 +21,7 @@ _fft.adc_to_V.restype = ctypes.POINTER(ctypes.c_float)
 _signal_processing = ctypes.CDLL(os.path.join(DIRECTORY, 'C_signal_processing_linux.so'))
 
 _signal_processing.harmonic_product_spectrum.restype = ctypes.POINTER(ctypes.c_float)
+_signal_processing.high_pass_filter.restype = ctypes.POINTER(ctypes.c_float)
 
 
 free = _fft.free_wrapper
@@ -73,7 +74,6 @@ def adc_to_V(x_adc, Vref, bit_depth):
 
 	return ret
 
-
 def bins_to_freq(sample_rate, N):
 	results = _fft.bins_to_freq(
 		ctypes.c_float(sample_rate),
@@ -85,20 +85,21 @@ def bins_to_freq(sample_rate, N):
 
 	return ret
 
-# def get_fundamental_freq(x, freqs, threshold):
-# 	assert(len(x) == len(freqs))
-# 	N = len(x)
+def high_pass_filter(x, bin_cutoff = 35):
+	N = len(x)
 
-# 	x_arr = (ctypes.c_float*N)(*x)
-# 	freq_arr = (ctypes.c_float*N)(*freqs)
+	x_arr = (ctypes.c_float*N)(*x)
 
-# 	result = _peak_detection.get_fundamental_freq(
-# 		x_arr,
-# 		freq_arr,
-# 		ctypes.c_size_t(N),
-# 		ctypes.c_float(threshold)
-# 	)
-# 	return float(result)
+	results = _signal_processing.high_pass_filter(
+		x_arr,
+		ctypes.c_size_t(N),
+		ctypes.c_size_t(bin_cutoff)
+	)
+
+	ret = [results[i] for i in range(N)]
+	free(results)
+
+	return ret
 
 
 

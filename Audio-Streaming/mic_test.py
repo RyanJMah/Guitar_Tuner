@@ -24,7 +24,7 @@ SRC_DIR = os.path.dirname(DIRECTORY)
 
 sys.path.append(os.path.join(SRC_DIR, "Signal-Processing"))
 
-from fft import *
+from fft_lib import *
 
 
 FORMAT = pyaudio.paInt16 # We use 16bit format per sample
@@ -54,8 +54,8 @@ start = time.time()
 
 dc_offset = np.mean(audio_samples)
 print(f"df_offset = {dc_offset}")
-audio_samples = [adc*(1/((1<<16) - 1)) for adc in audio_samples]  # converts adc values to voltages (assumes Vref = 1)
-                                                                  # wikipedia says Vref = 1 is common so ya...
+audio_samples = adc_to_V(audio_samples, 1, 16)  # converts adc values to voltages (assumes Vref = 1)
+                                                # wikipedia says Vref = 1 is common so ya...
 
 # dc_offset = np.mean(audio_samples)
 # print(f"df_offset = {dc_offset}")
@@ -74,7 +74,8 @@ high_pass = heaviside(int(CHUNK), 35)
 
 
 X = fft(audio_samples)
-X = [X[i]*high_pass[i] for i in range(int(CHUNK))]
+X = high_pass_filter(X, bin_cutoff = 35)
+# X = [X[i]*high_pass[i] for i in range(int(CHUNK))]
 
 X = harmonic_product_spectrum(freqs, X)
 
