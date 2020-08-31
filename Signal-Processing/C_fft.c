@@ -16,6 +16,8 @@ void free_wrapper(float* x) { free(x); }	// a wrapper for the free function so
 
 ////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DECLARATIONS
+float* adc_to_V(float* x_adc, size_t N, float Vref, unsigned int bit_depth);
+
 float magnitude(float complex z);
 float* take_magnitude(float complex* Af, unsigned int size);
 
@@ -30,6 +32,14 @@ float* bins_to_freq(float sample_rate, unsigned int N);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
+float* adc_to_V(float* x_adc, size_t N, float Vref, unsigned int bit_depth) {
+	float* x_V = malloc(N*sizeof(float));
+	for (size_t i = 0; i < N; i++) {
+		x_V[i] = x_adc[i]*(Vref/(1<<15 - 1));
+	}
+	return x_V;
+}
+
 float* take_magnitude(float complex* Af, unsigned int size) {
 	float* results = malloc(size*sizeof(float));
 	for (unsigned int i = 0; i < size; i++) {

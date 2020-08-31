@@ -1,7 +1,7 @@
 __doc__ =  """Python wrapper for signal processing algorithms written in C"""
 __author__ = "Ryan Mah"
 
-__all__ = ["fft", "bins_to_freq", "get_fundamental_freq"]
+# __all__ = ["fft", "harmonic_product_spectrum", "bins_to_freq", "get_fundamental_freq"]
 
 import os
 import sys
@@ -12,11 +12,16 @@ DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 
 _fft = ctypes.CDLL(os.path.join(DIRECTORY, 'C_fft_linux.so'))
+
 _fft.fft.restype = ctypes.POINTER(ctypes.c_float)
 _fft.bins_to_freq.restype = ctypes.POINTER(ctypes.c_float)
+_fft.adc_to_V.restype = ctypes.POINTER(ctypes.c_float)
 
-_peak_detection = ctypes.CDLL(os.path.join(DIRECTORY, 'C_peak_detection_linux.so'))
-_peak_detection.get_fundamental_freq.restype = ctypes.c_double
+
+_signal_processing = ctypes.CDLL(os.path.join(DIRECTORY, 'C_signal_processing_linux.so'))
+
+_signal_processing.harmonic_product_spectrum.restype = ctypes.POINTER(ctypes.c_float)
+
 
 free = _fft.free_wrapper
 
@@ -28,11 +33,45 @@ def fft(x):
 	
 	results = _fft.fft(x_arr, ctypes.c_uint(N))
 
+	ret = [results[i] for i in range(int(N))]
+	free(results)
+
+	return ret
+
+def harmonic_product_spectrum(freqs, x):
+	N = len(x)
+
+	x_arr = (ctypes.c_float*N)(*x)
+	freqs_arr = (ctypes.c_float*N)(*freqs)
+
+	results = _signal_processing.harmonic_product_spectrum(
+		x_arr,
+		freqs_arr,
+		ctypes.c_size_t(N)
+	)
+
 	ret = [results[i] for i in range(N)]
 	free(results)
 
 	return ret
 
+
+def adc_to_V(x_adc, Vref, bit_depth):
+	N = len(x_adc)
+
+	x_adc_arr = (ctypes.c_float*N)(*x_adc)
+
+	results = _fft.adc_to_V(
+		x_adc_arr,
+		ctypes.c_size_t(N),
+		ctypes.c_float(Vref),
+		ctypes.c_uint(bit_depth)
+	)
+
+	ret = [results[i] for i in range(N)]
+	free(results)
+
+	return ret
 
 
 def bins_to_freq(sample_rate, N):
@@ -46,22 +85,20 @@ def bins_to_freq(sample_rate, N):
 
 	return ret
 
+# def get_fundamental_freq(x, freqs, threshold):
+# 	assert(len(x) == len(freqs))
+# 	N = len(x)
 
+# 	x_arr = (ctypes.c_float*N)(*x)
+# 	freq_arr = (ctypes.c_float*N)(*freqs)
 
-def get_fundamental_freq(x, freqs, threshold):
-	assert(len(x) == len(freqs))
-	N = len(x)
-
-	x_arr = (ctypes.c_float*N)(*x)
-	freq_arr = (ctypes.c_float*N)(*freqs)
-
-	result = _peak_detection.get_fundamental_freq(
-		x_arr,
-		freq_arr,
-		ctypes.c_size_t(N),
-		ctypes.c_float(threshold)
-	)
-	return float(result)
+# 	result = _peak_detection.get_fundamental_freq(
+# 		x_arr,
+# 		freq_arr,
+# 		ctypes.c_size_t(N),
+# 		ctypes.c_float(threshold)
+# 	)
+# 	return float(result)
 
 
 
