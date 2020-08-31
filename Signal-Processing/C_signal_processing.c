@@ -21,12 +21,12 @@ float* harmonic_product_spectrum(float* x,float* freqs, size_t N) {
 
 	The formula for the harmonic product specturm is the following:
 
-			             r=R
-					   -------  /            \
-				        |   |  |  |        |  |
-				Y(f) =  |   |  |  | x(f*r) |  |
-			            |   |  |  |        |  |
-			             r=1    \            /
+                         r=R
+                       -------  /            \
+                        |   |  |  |        |  |
+                Y(f) =  |   |  |  | x(f*r) |  |
+                        |   |  |  |        |  |
+                         r=1    \            /
 
 	Where x(f) a signal in frequency domain, R is the number of harmonics being considered,
 	and Y(f) is the harmonic product spectrum of x(f).
@@ -37,8 +37,8 @@ float* harmonic_product_spectrum(float* x,float* freqs, size_t N) {
 
 	Henceforth, the fundamental frequency can then be approximated as:
 
-				                    /      \                 -1
-				f_fundamental = max|  f(Y)  |, where f(Y) = Y
+                                    /      \                 -1
+                f_fundamental = max|  f(Y)  |, where f(Y) = Y
                                     \      /
 
 	I will apply the harmonic product spectrum for R = 5 times, as this is the most amount of harmonics
