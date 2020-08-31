@@ -1,6 +1,3 @@
-# MOST OF THIS CODE WAS NOT WRITTEN BY ME
-# IT CAN BE FOUND HERE: https://gist.github.com/ZWMiller/53232427efc5088007cab6feee7c6e4c
-
 import time
 import pyaudio
 import numpy as np
@@ -22,9 +19,9 @@ def heaviside(N, phase_shift = 0):
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 SRC_DIR = os.path.dirname(DIRECTORY)
 
-sys.path.append(os.path.join(SRC_DIR, "Signal-Processing"))
+sys.path.append(os.path.join(SRC_DIR, "Signal-Processing", "lib"))
 
-from fft_lib import *
+from signal_processing_lib import *
 
 
 FORMAT = pyaudio.paInt16 # We use 16bit format per sample

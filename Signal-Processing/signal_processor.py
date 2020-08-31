@@ -17,6 +17,7 @@ import signal_processing_lib as sp
 class Signal_Processor(threading.Thread):
 	def __init__(self, in_queue, out_queue):
 		threading.Thread.__init__(self)
+		self.daemon = True
 
 		self.VREF = 1
 		self.BIT_DEPTH = 16
@@ -43,10 +44,7 @@ class Signal_Processor(threading.Thread):
 
 	def run(self):
 		"""Overriding threading.Thread run method"""
-		while True:
-			if not(self._running):
-				break
-
+		while self._running:
 			samples = self.in_buffer.get()
 			self.out_buffer.put(self.process_signal(samples))
 
@@ -57,6 +55,8 @@ class Signal_Processor(threading.Thread):
 
 
 def test_signal_processor():
+	import time
+
 	SRC_DIR = os.path.dirname(DIRECTORY)
 	sys.path.append(os.path.join(SRC_DIR, "Audio-Streaming"))
 
@@ -73,18 +73,17 @@ def test_signal_processor():
 	)
 
 	audio_streamer.start()
-	audio_streamer.GRACE_PERIOD = 0.01
 	signal_processor.start()
 
+	# time.sleep(5)
 	while True:
 		# this while loop simulates the GUI thread
-		try:
-			freq = signal_to_gui_queue.get()
-			print(f"Fundamental Frequency = {freq} Hz")
-		except queue.Empty:
-			print("Something is wrong, the buffer is not empty...")
-		except KeyboardInterrupt:
-			break
+		freq = signal_to_gui_queue.get()
+		print(f"Fundamental Frequency = {freq} Hz")
+
+		print(f"Queue empty = {audio_to_signal_queue.empty()}")
+
+
 
 	audio_streamer.stop()
 	signal_processor.stop()

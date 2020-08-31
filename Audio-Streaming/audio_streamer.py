@@ -12,14 +12,16 @@ class Audio_Streamer(threading.Thread):
 	def __init__(self, out_queue):
 		"""out_queue should be an instance of queue.Queue"""
 		threading.Thread.__init__(self)
+		self.daemon = True
 
 		self.FORMAT = pyaudio.paInt16 	# use 16-bit bit depth
 		self.CHANNELS = 1
 		self.SAMPLE_RATE = int(44.1E3)
 		self.BINS = 1 << 15
 
-		self.GRACE_PERIOD = 0.01
-		
+		self.GRACE_PERIOD = 0			# time period to allow signal processing algorithms to run.
+										# I think pyaudio is actually too slow for me to need this, 
+										# but I'll leave it in just in case 
 
 		self.buffer = out_queue
 		self._running = True
@@ -38,17 +40,16 @@ class Audio_Streamer(threading.Thread):
 		    input = True
 		)
 		self.stream.start_stream()
-		while True:
+		while True:			
 			if not(self._running):
-				break
+				break		
 
-			start = time.time()
-			
 			samples = np.frombuffer(self.stream.read(self.BINS), np.int16)
 			self.buffer.put(samples)
 
+			start = time.time()
 			while (time.time() - start) < self.GRACE_PERIOD:  # wait for grace period to complete
-				pass
+				time.sleep(0.000000001)
 
 	def stop(self):
 		self._running = False
