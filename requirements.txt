@@ -1,3 +1,2 @@
 PyAudio==0.2.11
 numpy==1.17.4
-matplotlib==3.2.1

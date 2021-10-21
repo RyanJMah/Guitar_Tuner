@@ -25,19 +25,24 @@ class GUI():
 
 
 		self.root = root
-		self.root.geometry("500x310")
+		self.root.geometry("400x225")
 		self.root.title("Guitar Tuner")
 		self.root.resizable(False, False)
 		self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
 
 		self.canvas = tk.Canvas(self.root)
-		self.canvas.pack()
+		self.canvas.pack(fill = "both", padx = (13, 0))
 
-		self.note = self.canvas.create_text(180, 190, font = ("Roboto", 50), text = "-")
+		self.note = self.canvas.create_text(180, 140, font = ("Roboto", 50), text = "-")
 		self.too_flat = self.canvas.create_rectangle(0, 60, 0+50, 60+40, outline = "grey", fill = "grey")
 		self.ok = self.canvas.create_text(180, 80, font = ("Roboto", 18, "bold"), fill = "grey", text = "OK")
 		self.too_sharp = self.canvas.create_rectangle(315, 60, 310+53, 60+40, outline = "grey", fill = "grey")
+
+#		self.note = self.canvas.create_text(180, 190, font = ("Roboto", 50), text = "-")
+#		self.too_flat = self.canvas.create_rectangle(0, 60, 0+50, 60+40, outline = "grey", fill = "grey")
+#		self.ok = self.canvas.create_text(180, 80, font = ("Roboto", 18, "bold"), fill = "grey", text = "OK")
+#		self.too_sharp = self.canvas.create_rectangle(315, 60, 310+53, 60+40, outline = "grey", fill = "grey")
 
 		self._running = True
 		self.update_gui()

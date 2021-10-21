@@ -11,14 +11,14 @@ import ctypes
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 
-_fft = ctypes.CDLL(os.path.join(DIRECTORY, 'C_fft_linux.so'))
+_fft = ctypes.CDLL(os.path.join(DIRECTORY, 'C_fft.so'))
 
 _fft.fft.restype = ctypes.POINTER(ctypes.c_float)
 _fft.bins_to_freq.restype = ctypes.POINTER(ctypes.c_float)
 _fft.adc_to_V.restype = ctypes.POINTER(ctypes.c_float)
 
 
-_signal_processing = ctypes.CDLL(os.path.join(DIRECTORY, 'C_signal_processing_linux.so'))
+_signal_processing = ctypes.CDLL(os.path.join(DIRECTORY, 'C_signal_processing.so'))
 
 _signal_processing.harmonic_product_spectrum.restype = ctypes.POINTER(ctypes.c_float)
 _signal_processing.high_pass_filter.restype = ctypes.POINTER(ctypes.c_float)
